@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-Alternative Streamlit app for exploring a CORD-19 metadata CSV.
-Same functionality as the original but restructured, with caching
-and some small UX improvements.
-"""
+
 from pathlib import Path
 from datetime import datetime
 import warnings
@@ -20,9 +16,7 @@ warnings.filterwarnings("ignore")
 sns.set_style("whitegrid")
 plt.rcParams.update({"figure.dpi": 150, "font.size": 11})
 
-# ---------------------------
 # Helpers & Constants
-# ---------------------------
 DEFAULT_SAMPLE_ROWS = 50000
 REQUIRED_COLS = {"publish_time", "abstract", "title", "journal", "source_x"}
 
@@ -32,9 +26,7 @@ def to_int_series(s, fill=0):
     return pd.to_numeric(s, errors="coerce").fillna(fill).astype(int)
 
 
-# ---------------------------
 # Data loading & preparation
-# ---------------------------
 @st.cache_data(ttl=600)
 def load_metadata(path: str | Path, nrows: int | None = None) -> pd.DataFrame:
     """Load a sample of the metadata CSV and do initial cleaning."""
@@ -64,9 +56,7 @@ def load_metadata(path: str | Path, nrows: int | None = None) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
-# ---------------------------
 # UI Rendering Functions
-# ---------------------------
 def render_header():
     st.markdown(
         "<h1 style='text-align:center; color:#1f77b4'>🔬 CORD-19 Data Explorer</h1>",
@@ -143,9 +133,7 @@ def show_top_metrics(df: pd.DataFrame, base_df: pd.DataFrame):
         st.metric("Publication Range", f"{df['publication_year'].min()} - {df['publication_year'].max()}")
 
 
-# ---------------------------
 # Visualization Functions
-# ---------------------------
 def plot_publications_by_year(df: pd.DataFrame):
     counts = df["publication_year"].value_counts().sort_index()
     fig = px.bar(
@@ -205,7 +193,7 @@ def render_wordcloud(df: pd.DataFrame, as_png: bool = True):
     wc = wc.generate(all_titles)
 
     if as_png:
-        # Render to a Matplotlib figure and display via st.pyplot (this is usually fast and robust)
+        # Render to a Matplotlib figure and display via st.pyplot 
         fig, ax = plt.subplots(figsize=(12, 6))
         ax.imshow(wc, interpolation="bilinear")
         ax.axis("off")
@@ -266,9 +254,7 @@ def render_insights(df: pd.DataFrame):
             st.write("No significant keywords found.")
 
 
-# ---------------------------
 # Main app runner
-# ---------------------------
 def main():
     st.set_page_config(page_title="CORD-19 Explorer (Derrick variant)", page_icon="🔬", layout="wide")
 

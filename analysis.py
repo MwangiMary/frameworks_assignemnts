@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-Alternative implementation of the CORD-19 quick analysis.
-Same outputs as the original script but with different structure
-and some stylistic/implementation changes.
-"""
+
 from pathlib import Path
 import argparse
 import warnings
@@ -53,7 +49,6 @@ def plot_publications_by_year(df: pd.DataFrame, out_dir: Path):
 
 
 def plot_top_journals(df: pd.DataFrame, top_n: int, out_dir: Path):
-    """Horizontal bar chart for top journals (different color palette)."""
     print("Creating top journals plot...")
     counts = df["journal"].value_counts().nlargest(top_n)
     fig, ax = plt.subplots(figsize=(9, 6))
@@ -89,7 +84,7 @@ def plot_word_count_distributions(df: pd.DataFrame, out_dir: Path):
 
 
 def plot_source_pie(df: pd.DataFrame, out_dir: Path):
-    """Pie chart for sources. Uses a simpler color set and explodes the largest slice."""
+    """Pie chart for sources. """
     print("Creating source distribution pie chart...")
     counts = df["source_x"].value_counts()
     labels = counts.index
@@ -134,8 +129,8 @@ def print_summary(df: pd.DataFrame, out_dir: Path):
 
 
 def load_and_prepare(path: Path, nrows: int = None) -> pd.DataFrame:
-    """Load CSV, perform cleaning and create features. Slightly different pipeline/ordering."""
-    print(f"Loading data from {path} (nrows={nrows})...")
+    """Load CSV, perform cleaning and create features."""
+    print(f"Loading data from {path} (nrows={nrows})....")
     df = pd.read_csv(path, low_memory=False, nrows=nrows)
     print(f"Raw rows loaded: {len(df)}")
 
@@ -176,7 +171,7 @@ def main():
 
     df = load_and_prepare(args.input, nrows=args.rows)
 
-    # Create visualizations (same set as original but different internals)
+    
     plot_publications_by_year(df, args.out)
     plot_top_journals(df, top_n=args.top, out_dir=args.out)
     plot_word_count_distributions(df, args.out)
